@@ -57,8 +57,8 @@ ob_start(); //construyendo el partial
         <tbody>
             <?php foreach($transactions as $transaction): ?>
                 <tr>
-                    <td><?= $transaction["amount"] ?></td>
-                    <td><?= $transaction["description"] ?></td>
+                    <td><?= htmlspecialchars($transaction["amount"]) ?></td>
+                    <td><?= htmlspecialchars($transaction["description"]) ?></td>
                     <td>
                         <p><?= $transaction["transaction_type_id"] === 1 ? "Ingreso" : "Egreso" ?></p>
                     </td>
@@ -109,6 +109,7 @@ ob_start(); //construyendo el partial
             success: function(response){
                 if(response.statusCode === 200){
                     showMessage(response.message, "alert-success");
+
 
                     //se anade la transaction a la lista de ultimos movimientos dinamicamente para no interactuar con el servidor
                     const transactionElement = $(`

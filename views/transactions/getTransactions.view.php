@@ -19,12 +19,12 @@ ob_start(); //construccion del partial
         <tbody >
             <?php foreach($transactions as $transaction): ?>
                 <tr>
-                    <td><?= $transaction["amount"] ?></td>
-                    <td><?= $transaction["description"] ?></td>
+                    <td><?= htmlspecialchars($transaction["amount"]) ?></td>
+                    <td><?= htmlspecialchars($transaction["description"]) ?></td>
                     <td><?= $transaction["moneyAccountName"] ?></td>
                     <td>
                         <p><?= $transaction["transactionTypeName"] ?></p>
-                        <p><?= $transaction["date_time"] ?></p>
+                        <p><?= htmlspecialchars($transaction["date_time"]) ?></p>
                     </td>
                 </tr>
             <?php endforeach ?>
@@ -48,20 +48,17 @@ ob_start(); //construccion del partial
 
                     if(response.transactions.length > 0){
                         response.transactions.forEach(transaction => {
-                        const row = $(`
-                            <tr>
-                                <td>${transaction.amount}</td>
-                                <td>${transaction.description}</td>
-                                <td>${transaction.moneyAccountName}</td>
-                                <td>
-                                    <p>${transaction.transactionTypeName}</p>
-                                    <p>${transaction.date_time}</p>
-                                </td>
-                            </tr>
-                        `);
+                        const $tr = $("<tr>");
+                            $tr.append($("<td>").text(transaction.amount));
+                            $tr.append($("<td>").text(transaction.description));
+                            $tr.append($("<td>").text(transaction.moneyAccountName));
+                            const $td = $("<td>");
+                            $td.append($("<p>").text(transaction.transactionTypeName));
+                            $td.append($("<p>").text(transaction.date_time));
+                            $tr.append($td);
 
-                        $("#transaction-list tbody").append(row);
-                    });
+                            $("#transaction-list tbody").prepend($tr); 
+                        });
                     }
                 },
                 error: function(){

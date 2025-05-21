@@ -19,18 +19,35 @@ if(!$repository->transactionTypeExists($formData["transactionTypeId"])){
     return sendResponse(400, "Ha ocurrido un error con el tipo de transaccion");
 }
 
+//validacion que el monto sea de tipo numerico
+if(!is_numeric($formData["amount"])){
+    return sendResponse(400, "Ha ocurrido un error con el monto. No es valido.");
+}
+
+//validacion montos negativos
 if($formData["amount"] <= 0){
-    return sendResponse(400, "Ha ocurrido un error con el monto");
+    return sendResponse(400, "Ha ocurrido un error con el monto. No puede ser negativo");
 }
 
 // validar fecha vacia
 if($formData["dateTime"] === ''){
-    return sendResponse(400, "Ha ocurrido un error con la fecha");
+    return sendResponse(400, "Ha ocurrido un error con la fecha. No puede ser vacio.");
+}
+
+//validar formato de fecha y los valores de la fecha (2025-45-54)
+$dateFormated = DateTime::createFromFormat("Y-m-d", $formData["dateTime"]);
+if(!$dateFormated){
+    return sendResponse(400, "Ha ocurrido un error con la fecha. Fecha no valida");
 }
 
 // validar existencia del moneyAccount
 if(!$repository->moneyAccountExists($formData["moneyAccountId"])){
     return sendResponse(400, "Ha ocurrido un error con la cuenta monetaria");
+}
+
+//validar longitud de la descripcion
+if(strlen($formData["description"]) > 255){
+    return sendResponse(400, "Ha ocurrido un error con la descripcion. Este no puede exceder los 255 caracteres");
 }
 
 //actualizar el dinero de las cuentas monetarias segun el tipo de transaccion

@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+//funcion para debuggear un valor
 function varInfo($value){
     echo "<pre>";
     var_dump($value);
     echo "</pre>";
 }
+
 
 function fullPath(string $path){
     $pathExists = realpath(__DIR__ . "/../$path");
